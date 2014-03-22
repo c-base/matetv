@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 from PyQt4 import QtCore, QtGui, Qt, QtNetwork
 from PyQt4.QtGui import QApplication, QLineEdit, QTableWidget, QTableWidgetItem, QWidget, QVBoxLayout, QFileDialog
 from gui import Ui_Form
@@ -9,17 +9,14 @@ import sys
 import cv
 import socket
 
-
-RESX = 40
-RESY = 16
 IP = "matelight.cbrp3.c-base.org"
 PORT = 1337
+RESX = 40
+RESY = 16
 KAMERA_NR = 0
-
 TOTAL_PIXELS = RESX * RESY
 FRAMES_PER_SECOND = 10
 TIME_BETWEEN_FRAMES = 1.0 / FRAMES_PER_SECOND
-INTERFACE_UDP = 0
 
 class MyForm(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -27,11 +24,8 @@ class MyForm(QtGui.QMainWindow):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
-        QtCore.QObject.connect(self.ui.pushButton_browse, QtCore.SIGNAL("clicked()"), self.cmd_browse_file)
-        QtCore.QObject.connect(self.ui.pushButton_send_image, QtCore.SIGNAL("clicked()"), self.cmd_send_image)
         QtCore.QObject.connect(self.ui.pushButton_stream_webcam, QtCore.SIGNAL("clicked()"), self.cmd_stream_webcam)
         QtCore.QObject.connect(self.ui.horizontalSlider_fps, QtCore.SIGNAL("valueChanged(int)"), self.cmd_fps_changed)
-        QtCore.QObject.connect(self.ui.checkBox_equalize, QtCore.SIGNAL("clicked(bool)"), self.cmd_equalize_changed)
         QtCore.QObject.connect(self.ui.verticalSlider_red, QtCore.SIGNAL("valueChanged(int)"), self.cmd_red_slider_changed)
         QtCore.QObject.connect(self.ui.verticalSlider_green, QtCore.SIGNAL("valueChanged(int)"), self.cmd_green_slider_changed)
         QtCore.QObject.connect(self.ui.verticalSlider_blue, QtCore.SIGNAL("valueChanged(int)"), self.cmd_blue_slider_changed)
@@ -45,7 +39,6 @@ class MyForm(QtGui.QMainWindow):
         self.connect(self.sock, QtCore.SIGNAL("readyRead()"), self.on_recv_udp_packet)
 
         self.image = None
-        self.debug_image = None
         self.streaming = False
         self.threshold = 128
         self.equalize = False
@@ -70,11 +63,9 @@ class MyForm(QtGui.QMainWindow):
 
         for row in xrange(mat.rows):
             for column in xrange(mat.cols):
-                # convert 24 bit to 12 bit 4:4:4 (rounding up using 0.5 + x trick)
                 red   = int(mat[row, column][2] * self.max_red   / 100.0)
                 green = int(mat[row, column][1] * self.max_green / 100.0)
                 blue  = int(mat[row, column][0] * self.max_blue  / 100.0)
-
                 bitstring.extend(struct.pack('BBB', red, green, blue))
 
         return bytearray(bitstring)
@@ -114,7 +105,7 @@ class MyForm(QtGui.QMainWindow):
             gr = frame[128: 384, 0: 640] # Crop from x, y, w, h -> 100, 200, 100, 200
             ml = cv.CreateImage((40, 16), cv.IPL_DEPTH_8U, frame.channels)
             cv.Resize(gr, ml)
-            cv.ShowImage("w1", gr)
+            cv.ShowImage("Matelight TV", gr)
             
             if time.time() > end_time:
                end_time = time.time() + self.time_between_frames
@@ -128,7 +119,6 @@ class MyForm(QtGui.QMainWindow):
         mg_mat = cv.GetMat(image)
         ml_data = self.convert_img_matrix_to_matelight(mg_mat) + "\00\00\00\00"
         data_c = bytearray([int(((x / 255.0) ** (gamma / 100.0)) * 255 * (brightness / 100.0)) for x in list(ml_data)])
-        #data_c = bytearray([int(((x / 255.0) ** gamma) * 255 * brightness) for x in list(ml_data)])
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(data_c, (IP, PORT))
@@ -170,7 +160,7 @@ class MyForm(QtGui.QMainWindow):
 
 
     def on_recv_udp_packet(self):
-        print "UDP packet received but ignored. TODO: implement handler.\n"
+        print "UDP packet received but ignored. TODO: implement handler."
 
 def main():
     app = QtGui.QApplication(sys.argv)
