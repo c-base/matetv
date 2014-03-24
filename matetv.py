@@ -15,7 +15,7 @@ RESX = 40
 RESY = 16
 KAMERA_NR = 0
 TOTAL_PIXELS = RESX * RESY
-FRAMES_PER_SECOND = 10
+FRAMES_PER_SECOND = 50
 TIME_BETWEEN_FRAMES = 1.0 / FRAMES_PER_SECOND
 
 class MyForm(QtGui.QMainWindow):
@@ -49,8 +49,8 @@ class MyForm(QtGui.QMainWindow):
         self.max_red   = 100
         self.max_green = 100
         self.max_blue  = 100
-        self.max_gamma = 200
-        self.max_brightness = 25
+        self.max_gamma = 100
+        self.max_brightness = 100
 
 
     def cv_load_image(self, file_path):

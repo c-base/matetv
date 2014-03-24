@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui.ui'
 #
-# Created: Sat Mar 22 02:01:03 2014
+# Created: Mon Mar 24 16:04:41 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,7 +34,8 @@ class Ui_Form(object):
         self.horizontalSlider_fps.setGeometry(QtCore.QRect(110, 350, 141, 29))
         self.horizontalSlider_fps.setMinimum(1)
         self.horizontalSlider_fps.setMaximum(1024)
-        self.horizontalSlider_fps.setProperty("value", 25)
+        self.horizontalSlider_fps.setProperty("value", 50)
+        self.horizontalSlider_fps.setSliderPosition(50)
         self.horizontalSlider_fps.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider_fps.setObjectName(_fromUtf8("horizontalSlider_fps"))
         self.label_4 = QtGui.QLabel(Form)
@@ -42,7 +43,8 @@ class Ui_Form(object):
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.lcdNumber = QtGui.QLCDNumber(Form)
         self.lcdNumber.setGeometry(QtCore.QRect(120, 300, 131, 41))
-        self.lcdNumber.setProperty("value", 25.0)
+        self.lcdNumber.setProperty("value", 50.0)
+        self.lcdNumber.setProperty("intValue", 50)
         self.lcdNumber.setObjectName(_fromUtf8("lcdNumber"))
         self.groupBox = QtGui.QGroupBox(Form)
         self.groupBox.setGeometry(QtCore.QRect(50, 20, 541, 261))
